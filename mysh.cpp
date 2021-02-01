@@ -1,16 +1,22 @@
 #include <iostream>
 #include <string>
+#include <vector>
+#include <fstream>
 #include <unistd.h>
 
 // The Shell Class
 class Shell {
 	private:
 		std::string _currentDirectory = "";
+		std::vector<std::string> _history;
 	public:
 		Shell(std::string startingDirectory);
 		void SetCurrentDirectory(std::string currentDirectory);
 		std::string GetCurrentDirectory();
 		void ExecuteCommand(std::string command);
+		void AddToHistory(std::string command);
+		std::vector<std::string> GetHistory();
+		void WriteHistory();
 };
 
 void Prompt(Shell);
@@ -61,8 +67,41 @@ std::string Shell::GetCurrentDirectory() {
 
 // Execute the Given Command
 void Shell::ExecuteCommand(std::string command) {
+	//Change the Working Directory
+	if (!command.substr(0, 8).compare("movetodir")) {
+		std::cout << "change dir" << std::endl;
+	}
+
 	//Print Current Location on 'whereami'
-	if (!command.compare("whereami")) {
+	else if (!command.compare("whereami")) {
 		std::cout << GetCurrentDirectory() << std::endl;
 	}
+
+	//Write to the History File and Exit
+	else if (!command.compare("byebye")) {
+		WriteHistory();
+	}
+
+	//Add the Previously Executed Command to History
+	AddToHistory(command);
+}
+
+// Add A Command to the History Vector
+void Shell::AddToHistory(std::string command) {
+	_history.push_back(command);
+}
+
+// Return the History Vector
+std::vector<std::string> Shell::GetHistory() {
+	return _history;
+}
+
+// Write the History File
+void Shell::WriteHistory() {
+	std::ofstream historyFile;
+	historyFile.open("history.txt", std::ofstream::out | std::ofstream::app);
+	for (unsigned int i = 0; i < _history.size(); i++) {
+		historyFile << _history[i] << std::endl;
+	}
+	historyFile.close();
 }
