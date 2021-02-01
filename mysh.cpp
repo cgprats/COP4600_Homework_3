@@ -7,9 +7,10 @@ class Shell {
 	private:
 		std::string _currentDirectory = "";
 	public:
-		Shell(std::string);
-		void SetCurrentDirectory(std::string);
+		Shell(std::string startingDirectory);
+		void SetCurrentDirectory(std::string currentDirectory);
 		std::string GetCurrentDirectory();
+		void ExecuteCommand(std::string command);
 };
 
 void Prompt(Shell);
@@ -31,9 +32,14 @@ void Prompt(Shell mysh) {
 	//Create Local Variables
 	std::string command;
 
+	//Continue Prompting for Command Until User Exits
 	while (command.compare("byebye")) {
+		//Ask User for Command
 		std::cout << "# ";
 		std::cin >> command;
+
+		//Execute the Given Command
+		mysh.ExecuteCommand(command);
 	}
 
 }
@@ -51,4 +57,12 @@ void Shell::SetCurrentDirectory(std::string currentDirectory) {
 // Get the Working Directory
 std::string Shell::GetCurrentDirectory() {
 	return _currentDirectory;
+}
+
+// Execute the Given Command
+void Shell::ExecuteCommand(std::string command) {
+	//Print Current Location on 'whereami'
+	if (!command.compare("whereami")) {
+		std::cout << GetCurrentDirectory() << std::endl;
+	}
 }
