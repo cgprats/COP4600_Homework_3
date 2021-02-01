@@ -1,2 +1,2 @@
 build:
-	c++ mysh.cpp -o mysh
+	c++ mysh.cpp -o out/mysh.out
