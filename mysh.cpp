@@ -33,9 +33,6 @@ int main() {
 
 	//Start the Command Prompt
 	Prompt(mysh);
-	
-	std::string temp;
-	std::cout << temp;
 
 	//Return 0 to Cleanly Exit the Program
 	return 0;
