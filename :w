@@ -17,10 +17,7 @@ class Shell {
 		void ExecuteCommand(std::string command);
 		void AddToHistory(std::string command);
 		std::vector<std::string> GetHistory();
-		void ImportHistory();
 		void WriteHistory();
-		void PrintHistory();
-		void ClearHistory();
 };
 
 // The Prompt Prototype
@@ -61,7 +58,6 @@ void Prompt(Shell mysh) {
 // Shell Constructor
 Shell::Shell(std::string startingDirectory) {
 	_currentDirectory = startingDirectory;
-	ImportHistory();
 }
 
 // Set the Working Directory
@@ -76,9 +72,6 @@ std::string Shell::GetCurrentDirectory() {
 
 // Execute the Given Command
 void Shell::ExecuteCommand(std::string command) {
-	//Add the Command to History
-	AddToHistory(command);
-
 	//Split the Command into Vector
 	std::stringstream stream(command);
 	std::string tempstr;
@@ -89,78 +82,55 @@ void Shell::ExecuteCommand(std::string command) {
 
 	//Change the Working Directory
 	if (!splitCommand[0].compare("movetodir")) {
-		if (splitCommand.size() == 2) {
+		if (splitCommand.size == 2) {
 			SetCurrentDirectory(splitCommand[1]);
-		}
-		else {
-			std::cout << "Incorrect Amount of Parameters!" << std::endl;
-			std::cout << "The correct syntax is movetodir directory" << std::endl;
 		}
 	}
 
 	//Print Current Location
-	else if (!splitCommand[0].compare("whereami")) {
+	else if (!command.compare("whereami")) {
 		std::cout << GetCurrentDirectory() << std::endl;
 	}
 
 	//Perform History Related Operations
-	else if (!splitCommand[0].compare("history")) {
-		//Clear the History
-		if (splitCommand.size() == 2 && !splitCommand[1].compare("-c")) {
-			ClearHistory();
-		}
-		//Print the History
-		else if (splitCommand.size() == 1) {
-			PrintHistory();
-		}
-		else {
-			std::cout << "Incorrect Amount of Parameters!" << std::endl;
-			std::cout << "The correct syntax is history [-c]" << std::endl;
+	//TODO: FIX PARSING FOR -c FLAG
+	else if (!command.compare("history")) {
+		if (!command.substr(command.find(' ') + 1, command.length() - 1).compare("-c")) {
+			std::cout << "print history" << std::endl;
 		}
 	}
 
 	//Write to the History File and Exit
-	else if (!splitCommand[0].compare("byebye")) {
+	else if (!command.compare("byebye")) {
 		WriteHistory();
 	}
 
 	//Re-Execute a Command from History
-	else if (!splitCommand[0].compare("replay")) {
+	else if (!command.compare("replay")) {
 	}
 
 	//Start a Program
-	else if (!splitCommand[0].compare("start")) {
+	else if (!command.compare("start")) {
 	}
 
 	//Start a Program in the Background
-	else if (!splitCommand[0].compare("background")) {
+	else if (!command.compare("background")) {
 	}
 
 	//Kill a Process
-	else if (!splitCommand[0].compare("dalek")) {
+	else if (!command.compare("dalek")) {
 	}
 
 	//Repeatedly Run a Process
-	else if (!splitCommand[0].compare("repeat")) {
+	else if (!command.compare("repeat")) {
 	}
 
 	//Kill All Processes Started by the Shell
-	else if (!splitCommand[0].compare("dalekall")) {
+	else if (!command.compare("dalekall")) {
 	}
 
-	else {
-		std::cout << "Command Not Found" << std::endl;
-	}
-}
-
-// Import the History from File
-void Shell::ImportHistory() {
-	std::ifstream historyFile;
-	historyFile.open("history.txt");
-	std::string historicCommand;
-	while(std::getline(historyFile, historicCommand)) {
-		_history.push_back(historicCommand);
-	}
+	//Add the Previously Executed Command to History
+	AddToHistory(command);
 }
 
 // Add A Command to the History Vector
@@ -176,21 +146,9 @@ std::vector<std::string> Shell::GetHistory() {
 // Write the History File
 void Shell::WriteHistory() {
 	std::ofstream historyFile;
-	historyFile.open("history.txt");
+	historyFile.open("history.txt", std::ofstream::out | std::ofstream::app);
 	for (unsigned int i = 0; i < _history.size(); i++) {
 		historyFile << _history[i] << std::endl;
 	}
 	historyFile.close();
-}
-
-// Print the Reversed History
-void Shell::PrintHistory() {
-	for (int i = _history.size() - 1, j = 0; i >= 0; i--, j++) {
-		std::cout << j << ": " << _history[i] << std::endl;
-	}
-}
-
-// Clear the Command History
-void Shell::ClearHistory() {
-	_history.clear();
 }
