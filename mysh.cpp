@@ -153,6 +153,16 @@ void Shell::ExecuteCommand(std::string command) {
 	}
 }
 
+// Add A Command to the History Vector
+void Shell::AddToHistory(std::string command) {
+	_history.push_back(command);
+}
+
+// Return the History Vector
+std::vector<std::string> Shell::GetHistory() {
+	return _history;
+}
+
 // Import the History from File
 void Shell::ImportHistory() {
 	std::ifstream historyFile;
@@ -163,15 +173,6 @@ void Shell::ImportHistory() {
 	}
 }
 
-// Add A Command to the History Vector
-void Shell::AddToHistory(std::string command) {
-	_history.push_back(command);
-}
-
-// Return the History Vector
-std::vector<std::string> Shell::GetHistory() {
-	return _history;
-}
 
 // Write the History File
 void Shell::WriteHistory() {

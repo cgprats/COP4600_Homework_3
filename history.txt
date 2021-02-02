@@ -5,3 +5,5 @@ history
 byebye
 command
 byebye
+history
+byebye
