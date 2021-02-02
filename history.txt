@@ -1,0 +1,21 @@
+movetodir
+quit
+movetodir
+e
+exit
+exit
+te
+ei
+exit
+bye
+bye
+whereami
+movetodir /
+whereami
+history -c
+exit
+history -c
+history -c
+history
+-c
+exit

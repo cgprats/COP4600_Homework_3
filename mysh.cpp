@@ -19,6 +19,7 @@ class Shell {
 		void WriteHistory();
 };
 
+// The Prompt Prototype
 void Prompt(Shell);
 
 // The Main Function
@@ -28,6 +29,9 @@ int main() {
 
 	//Start the Command Prompt
 	Prompt(mysh);
+	
+	std::string temp;
+	std::cout << temp;
 
 	//Return 0 to Cleanly Exit the Program
 	return 0;
@@ -42,7 +46,7 @@ void Prompt(Shell mysh) {
 	while (command.compare("byebye")) {
 		//Ask User for Command
 		std::cout << "# ";
-		std::cin >> command;
+		std::getline(std::cin >> std::ws, command);
 
 		//Execute the Given Command
 		mysh.ExecuteCommand(command);
@@ -68,18 +72,50 @@ std::string Shell::GetCurrentDirectory() {
 // Execute the Given Command
 void Shell::ExecuteCommand(std::string command) {
 	//Change the Working Directory
-	if (!command.substr(0, 8).compare("movetodir")) {
-		std::cout << "change dir" << std::endl;
+	if (!command.substr(0, command.find(' ')).compare("movetodir")) {
+		SetCurrentDirectory(command.substr(command.find(' ') + 1, command.length()));
 	}
 
-	//Print Current Location on 'whereami'
+	//Print Current Location
 	else if (!command.compare("whereami")) {
 		std::cout << GetCurrentDirectory() << std::endl;
+	}
+
+	//Perform History Related Operations
+	//TODO: FIX PARSING FOR -c FLAG
+	else if (!command.compare("history")) {
+		if (!command.substr(command.find(' ') + 1, command.length() - 1).compare("-c")) {
+			std::cout << "print history" << std::endl;
+		}
 	}
 
 	//Write to the History File and Exit
 	else if (!command.compare("byebye")) {
 		WriteHistory();
+	}
+
+	//Re-Execute a Command from History
+	else if (!command.compare("replay")) {
+	}
+
+	//Start a Program
+	else if (!command.compare("start")) {
+	}
+
+	//Start a Program in the Background
+	else if (!command.compare("background")) {
+	}
+
+	//Kill a Process
+	else if (!command.compare("dalek")) {
+	}
+
+	//Repeatedly Run a Process
+	else if (!command.compare("repeat")) {
+	}
+
+	//Kill All Processes Started by the Shell
+	else if (!command.compare("dalekall")) {
 	}
 
 	//Add the Previously Executed Command to History
