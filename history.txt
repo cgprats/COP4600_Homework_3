@@ -1,1 +1,22 @@
 byebye
+start x
+background x
+byebye
+start xterm
+byebye
+start xterm
+bye
+byebye
+start ls
+background ls
+byebye
+start xterm
+byebye
+start xterm
+background xterm
+exit
+byebye
+background xterm
+kill 27737
+dalek 27737
+byebye

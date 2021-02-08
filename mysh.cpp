@@ -4,6 +4,7 @@
 #include <vector>
 #include <fstream>
 #include <unistd.h>
+#include <sys/wait.h>
 
 // The Shell Class
 class Shell {
@@ -21,6 +22,9 @@ class Shell {
 		void WriteHistory();
 		void PrintHistory();
 		void ClearHistory();
+		void ReplayCommand(int n);
+		void ExecSystem(std::vector<std::string> splitCommand);
+		void KillSystem(int pid);
 };
 
 // The Prompt Prototype
@@ -63,7 +67,30 @@ Shell::Shell(std::string startingDirectory) {
 
 // Set the Working Directory
 void Shell::SetCurrentDirectory(std::string newCurrentDirectory) {
-	currentDirectory = newCurrentDirectory;
+	//Convert Relative Path to Absolute
+	if (newCurrentDirectory.at(0) != '/') {
+		newCurrentDirectory = currentDirectory + '/' + newCurrentDirectory;
+	}
+	
+	//Create a Char Array to Check if Directory Exists
+	char checkDir[newCurrentDirectory.size() + 1];
+	newCurrentDirectory.copy(checkDir, newCurrentDirectory.size() + 1);
+	checkDir[newCurrentDirectory.size()] = '\0';
+
+	//If directory exists, change directory
+	if (realpath(checkDir, NULL) != NULL) {
+		currentDirectory = newCurrentDirectory;
+	}
+
+	//If directory doesn't exist, print error
+	else {
+		std::cout << "Error: Directory Does Not Exist" << std::endl;
+	}
+
+	//Remove Trailing / if it Exists
+	if (currentDirectory.at(currentDirectory.size() - 1) == '/') {
+		currentDirectory.erase(currentDirectory.size() - 1);
+	}
 }
 
 // Get the Working Directory
@@ -123,18 +150,28 @@ void Shell::ExecuteCommand(std::string command) {
 
 	//Re-Execute a Command from History
 	else if (!splitCommand[0].compare("replay")) {
+		ReplayCommand(std::stoi(splitCommand[1]));
 	}
 
 	//Start a Program
 	else if (!splitCommand[0].compare("start")) {
+		ExecSystem(splitCommand);
 	}
 
 	//Start a Program in the Background
 	else if (!splitCommand[0].compare("background")) {
+		ExecSystem(splitCommand);
 	}
 
 	//Kill a Process
 	else if (!splitCommand[0].compare("dalek")) {
+		if (splitCommand.size() == 2) {
+			KillSystem(std::stoi(splitCommand[1]));
+		}
+		else {
+			std::cout << "Incorrect Amount of Parameters!" << std::endl;
+			std::cout << "The correct syntax is dalek pid" << std::endl;
+		}
 	}
 
 	//Repeatedly Run a Process
@@ -191,4 +228,66 @@ void Shell::PrintHistory() {
 // Clear the Command History
 void Shell::ClearHistory() {
 	history.clear();
+}
+
+// Rerun a Command From History
+void Shell::ReplayCommand(int n) {
+	//Print the Command to be Replayed
+	std::cout << history[history.size() - 2 - n] << std::endl;
+	//Execute the Command to be Replayed
+	ExecuteCommand(history[history.size() - 2 - n]);
+}
+
+// Execute a System Command
+void Shell::ExecSystem(std::vector<std::string> splitCommand) {
+	//Find the System Command to Execute
+	std::string baseCommandStr = splitCommand[1];
+	if (baseCommandStr.at(0) != '/') {
+		baseCommandStr = currentDirectory + "/" + baseCommandStr;
+	}
+
+	//Find the Command Arguments
+	std::string argumentsStr;
+	for (unsigned int i = 2; i < splitCommand.size(); i++) {
+		argumentsStr = splitCommand[i] + " ";
+	}
+	
+	//Create Base Command Char Array
+	char baseCommand[baseCommandStr.size() + 1];
+	baseCommandStr.copy(baseCommand, baseCommandStr.size() + 1);
+	baseCommand[baseCommandStr.size()] = '\0';
+
+	//Create Arguments Char Array
+	char arguments[argumentsStr.size() + 1];
+	argumentsStr.copy(arguments, argumentsStr.size() + 1);
+	arguments[argumentsStr.size()] = '\0';
+
+	//Execute the Program
+	pid_t pid;
+	pid = fork();
+
+	//Handle Fork Error
+	if (pid < 0) {
+		std::cout << "Failed to Fork Process" << std::endl;
+	}
+
+	//Execute Child Process
+	else if (pid == 0) {
+		execl("/usr/bin/xterm", "/usr/bin/xterm", "-bg", "green", NULL);
+	}
+
+	//Run Program in Foreground
+	else if (!splitCommand[0].compare("start")) {
+		wait(NULL);
+	}
+
+	//Run Program in Background
+	else if (!splitCommand[0].compare("background")) {
+		std::cout << "pid: " << pid << std::endl;
+	}
+}
+
+// Kill a System Process
+void Shell::KillSystem(int pid) {
+	kill(pid, 9);
 }
