@@ -1,9 +1,1 @@
-command1
-history
-byebye
-history
-byebye
-command
-byebye
-history
 byebye

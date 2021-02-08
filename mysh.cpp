@@ -8,8 +8,8 @@
 // The Shell Class
 class Shell {
 	private:
-		std::string _currentDirectory = "";
-		std::vector<std::string> _history;
+		std::string currentDirectory = "";
+		std::vector<std::string> history;
 	public:
 		Shell(std::string startingDirectory);
 		void SetCurrentDirectory(std::string currentDirectory);
@@ -57,18 +57,18 @@ void Prompt(Shell mysh) {
 
 // Shell Constructor
 Shell::Shell(std::string startingDirectory) {
-	_currentDirectory = startingDirectory;
+	currentDirectory = startingDirectory;
 	ImportHistory();
 }
 
 // Set the Working Directory
-void Shell::SetCurrentDirectory(std::string currentDirectory) {
-	_currentDirectory = currentDirectory;
+void Shell::SetCurrentDirectory(std::string newCurrentDirectory) {
+	currentDirectory = newCurrentDirectory;
 }
 
 // Get the Working Directory
 std::string Shell::GetCurrentDirectory() {
-	return _currentDirectory;
+	return currentDirectory;
 }
 
 // Execute the Given Command
@@ -152,12 +152,12 @@ void Shell::ExecuteCommand(std::string command) {
 
 // Add A Command to the History Vector
 void Shell::AddToHistory(std::string command) {
-	_history.push_back(command);
+	history.push_back(command);
 }
 
 // Return the History Vector
 std::vector<std::string> Shell::GetHistory() {
-	return _history;
+	return history;
 }
 
 // Import the History from File
@@ -166,7 +166,7 @@ void Shell::ImportHistory() {
 	historyFile.open("history.txt");
 	std::string historicCommand;
 	while(std::getline(historyFile, historicCommand)) {
-		_history.push_back(historicCommand);
+		history.push_back(historicCommand);
 	}
 }
 
@@ -175,20 +175,20 @@ void Shell::ImportHistory() {
 void Shell::WriteHistory() {
 	std::ofstream historyFile;
 	historyFile.open("history.txt");
-	for (unsigned int i = 0; i < _history.size(); i++) {
-		historyFile << _history[i] << std::endl;
+	for (unsigned int i = 0; i < history.size(); i++) {
+		historyFile << history[i] << std::endl;
 	}
 	historyFile.close();
 }
 
 // Print the Reversed History
 void Shell::PrintHistory() {
-	for (int i = _history.size() - 1, j = 0; i >= 0; i--, j++) {
-		std::cout << j << ": " << _history[i] << std::endl;
+	for (int i = history.size() - 1, j = 0; i >= 0; i--, j++) {
+		std::cout << j << ": " << history[i] << std::endl;
 	}
 }
 
 // Clear the Command History
 void Shell::ClearHistory() {
-	_history.clear();
+	history.clear();
 }
