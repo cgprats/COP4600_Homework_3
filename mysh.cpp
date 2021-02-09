@@ -266,6 +266,7 @@ void Shell::ExecSystem(std::vector<std::string> splitCommand) {
 
 	//Execute Child Process
 	else if (pid == 0) {
+		//If Command is Not Found, Print Error and Exit Child
 		if (execv(command[0], command) == -1) {
 			std::cout << "Command Not Found or Cannot be Executed" << std::endl;
 			exit(EXIT_FAILURE);
