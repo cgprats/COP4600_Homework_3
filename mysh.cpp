@@ -268,6 +268,7 @@ void Shell::ExecSystem(std::vector<std::string> splitCommand) {
 	else if (pid == 0) {
 		if (execv(command[0], command) == -1) {
 			std::cout << "Command Not Found or Cannot be Executed" << std::endl;
+			exit(EXIT_FAILURE);
 		}
 	}
 

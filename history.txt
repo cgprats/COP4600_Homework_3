@@ -5,3 +5,7 @@ start xterm
 byebye
 start xterm
 byebye
+start /usr/bin/e
+byebye
+start /usr/e
+byebye
