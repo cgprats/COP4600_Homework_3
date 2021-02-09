@@ -1,54 +1,7 @@
-byebye
-start x
-background x
-byebye
-start xterm
-byebye
-start xterm
-bye
-byebye
-start ls
-background ls
+history
+background /usr/bin/xterm
 byebye
 start xterm
 byebye
 start xterm
-background xterm
-exit
-byebye
-background xterm
-kill 27737
-dalek 27737
-byebye
-background x
-background x
-dalekall
-dalekall
-byebye
-background d
-background d
-dalekall
-dalekall
-byebye
-background x
-background y
-dalekall
-dalekall
-byebye
-background x
-background y
-dalekall
-dalekall
-byebye
-repeat 4 xe
-dalekall
-byebye
-byebye
-start x
-background x
-background
-byebye
-start x
-background x
-dalekall
 byebye

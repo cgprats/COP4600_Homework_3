@@ -240,27 +240,20 @@ void Shell::ReplayCommand(int n) {
 
 // Execute a System Command
 void Shell::ExecSystem(std::vector<std::string> splitCommand) {
-	//Find the System Command to Execute
-	std::string baseCommandStr = splitCommand[1];
-	if (baseCommandStr.at(0) != '/') {
-		baseCommandStr = currentDirectory + "/" + baseCommandStr;
+	//Convert Relative Path to Absolute
+	if (splitCommand[1].at(0) != '/') {
+		splitCommand[1] = currentDirectory + '/' + splitCommand[1];
 	}
 
-	//Find the Command Arguments
-	std::string argumentsStr;
-	for (unsigned int i = 2; i < splitCommand.size(); i++) {
-		argumentsStr = splitCommand[i] + " ";
+	//Convert the Split Command Vector into an Array of Char Pointers
+	std::vector<char*> commandVector;
+	for (unsigned int i = 1; i < splitCommand.size(); i++) {
+		commandVector.push_back(const_cast<char*>(splitCommand[i].c_str()));
 	}
+	commandVector.push_back(NULL);
 
-	//Create Base Command Char Array
-	char baseCommand[baseCommandStr.size() + 1];
-	baseCommandStr.copy(baseCommand, baseCommandStr.size() + 1);
-	baseCommand[baseCommandStr.size()] = '\0';
-
-	//Create Arguments Char Array
-	char arguments[argumentsStr.size() + 1];
-	argumentsStr.copy(arguments, argumentsStr.size() + 1);
-	arguments[argumentsStr.size()] = '\0';
+	//Create a Command Double Pointer from Command Vector for Use in execv
+	char **command = commandVector.data();
 
 	//Execute the Program
 	pid_t pid;
@@ -273,7 +266,9 @@ void Shell::ExecSystem(std::vector<std::string> splitCommand) {
 
 	//Execute Child Process
 	else if (pid == 0) {
-		execl("/usr/bin/xterm", "/usr/bin/xterm", "-bg", "green", NULL);
+		if (execv(command[0], command) == -1) {
+			std::cout << "Command Not Found or Cannot be Executed" << std::endl;
+		}
 	}
 
 	//Run Program in Foreground
