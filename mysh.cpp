@@ -313,7 +313,7 @@ void Shell::KillSystem(int pid) {
 	}
 }
 
-//Kills All Backgrounded Processes
+// Kills All Backgrounded Processes
 void Shell::KillAll() {
 	//Print Amount of Processes to Kill
 	std::cout << "Exterminating " << backgroundPid.size() << " Processes:" << std::endl;
@@ -327,6 +327,7 @@ void Shell::KillAll() {
 	std::cout << "All Processes Exterminated" << std::endl;
 }
 
+// Runs a Command in the Background a Specified Number of Times
 void Shell::RepeatedCommand(std::vector<std::string> splitCommand) {
 	//Get the Number of Repetitions
 	int numRepetitions = std::stoi(splitCommand[1]);
