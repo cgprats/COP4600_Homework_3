@@ -11,6 +11,7 @@ class Shell {
 	private:
 		std::string currentDirectory = "";
 		std::vector<std::string> history;
+		std::vector<int> backgroundPid;
 	public:
 		Shell(std::string startingDirectory);
 		void SetCurrentDirectory(std::string currentDirectory);
@@ -25,6 +26,7 @@ class Shell {
 		void ReplayCommand(int n);
 		void ExecSystem(std::vector<std::string> splitCommand);
 		void KillSystem(int pid);
+		void KillAll();
 };
 
 // The Prompt Prototype
@@ -180,6 +182,7 @@ void Shell::ExecuteCommand(std::string command) {
 
 	//Kill All Processes Started by the Shell
 	else if (!splitCommand[0].compare("dalekall")) {
+		KillAll();
 	}
 
 	else {
@@ -284,10 +287,31 @@ void Shell::ExecSystem(std::vector<std::string> splitCommand) {
 	//Run Program in Background
 	else if (!splitCommand[0].compare("background")) {
 		std::cout << "pid: " << pid << std::endl;
+		backgroundPid.push_back(pid);
 	}
 }
 
 // Kill a System Process
 void Shell::KillSystem(int pid) {
-	kill(pid, 9);
+	if (!kill(pid, 9)) {
+		std::cout << "Exterminating pid: " << pid << std::endl;
+	}
+	else {
+		std::cout << "Failed to exterminate pid: " << pid << std::endl;
+	}
+
+	//Remove Process from Vector of Backgrounded Processes
+	for (unsigned int i = 0; i < backgroundPid.size(); i++) {
+		if (pid == backgroundPid[i]) {
+			backgroundPid.erase(backgroundPid.begin() + i);
+		}
+	}
+}
+
+//Kills All Backgrounded Processes
+void Shell::KillAll() {
+	std::cout << "Exterminating " << backgroundPid.size() << " Processes:" << std::endl;
+	while (backgroundPid.size() > 0) {
+		KillSystem(backgroundPid[0]);
+	}
 }

@@ -20,3 +20,23 @@ background xterm
 kill 27737
 dalek 27737
 byebye
+background x
+background x
+dalekall
+dalekall
+byebye
+background d
+background d
+dalekall
+dalekall
+byebye
+background x
+background y
+dalekall
+dalekall
+byebye
+background x
+background y
+dalekall
+dalekall
+byebye
