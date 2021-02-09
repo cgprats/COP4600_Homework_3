@@ -27,6 +27,7 @@ class Shell {
 		void ExecSystem(std::vector<std::string> splitCommand);
 		void KillSystem(int pid);
 		void KillAll();
+		void RepeatedCommand(std::vector<std::string> splitCommand);
 };
 
 // The Prompt Prototype
@@ -178,6 +179,7 @@ void Shell::ExecuteCommand(std::string command) {
 
 	//Repeatedly Run a Process
 	else if (!splitCommand[0].compare("repeat")) {
+		RepeatedCommand(splitCommand);
 	}
 
 	//Kill All Processes Started by the Shell
@@ -293,9 +295,12 @@ void Shell::ExecSystem(std::vector<std::string> splitCommand) {
 
 // Kill a System Process
 void Shell::KillSystem(int pid) {
+	//Print Success Message
 	if (!kill(pid, 9)) {
 		std::cout << "Exterminating pid: " << pid << std::endl;
 	}
+	
+	//Print Error Message on Failure
 	else {
 		std::cout << "Failed to exterminate pid: " << pid << std::endl;
 	}
@@ -310,8 +315,27 @@ void Shell::KillSystem(int pid) {
 
 //Kills All Backgrounded Processes
 void Shell::KillAll() {
+	//Print Amount of Processes to Kill
 	std::cout << "Exterminating " << backgroundPid.size() << " Processes:" << std::endl;
+
+	//Exterminate Processes until Background Processes Vector is Empty
 	while (backgroundPid.size() > 0) {
 		KillSystem(backgroundPid[0]);
+	}
+	
+	//Print Completion Message
+	std::cout << "All Processes Exterminated" << std::endl;
+}
+
+void Shell::RepeatedCommand(std::vector<std::string> splitCommand) {
+	//Get the Number of Repetitions
+	int numRepetitions = std::stoi(splitCommand[1]);
+
+	//Create the New Command String
+	splitCommand.erase(splitCommand.begin());
+	splitCommand[0] = "background";
+
+	for (int i = 0; i < numRepetitions; i++) {
+		ExecSystem(splitCommand);
 	}
 }
