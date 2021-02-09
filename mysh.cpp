@@ -328,6 +328,7 @@ void Shell::RepeatedCommand(std::vector<std::string> splitCommand) {
 	splitCommand.erase(splitCommand.begin());
 	splitCommand[0] = "background";
 
+	//Execute the Repeated Command
 	for (int i = 0; i < numRepetitions; i++) {
 		ExecSystem(splitCommand);
 	}
