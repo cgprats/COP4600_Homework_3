@@ -74,7 +74,7 @@ void Shell::SetCurrentDirectory(std::string newCurrentDirectory) {
 	if (newCurrentDirectory.at(0) != '/') {
 		newCurrentDirectory = currentDirectory + '/' + newCurrentDirectory;
 	}
-	
+
 	//Create a Char Array to Check if Directory Exists
 	char checkDir[newCurrentDirectory.size() + 1];
 	newCurrentDirectory.copy(checkDir, newCurrentDirectory.size() + 1);
@@ -256,7 +256,7 @@ void Shell::ExecSystem(std::vector<std::string> splitCommand) {
 	for (unsigned int i = 2; i < splitCommand.size(); i++) {
 		argumentsStr = splitCommand[i] + " ";
 	}
-	
+
 	//Create Base Command Char Array
 	char baseCommand[baseCommandStr.size() + 1];
 	baseCommandStr.copy(baseCommand, baseCommandStr.size() + 1);
@@ -299,7 +299,7 @@ void Shell::KillSystem(int pid) {
 	if (!kill(pid, 9)) {
 		std::cout << "Exterminating pid: " << pid << std::endl;
 	}
-	
+
 	//Print Error Message on Failure
 	else {
 		std::cout << "Failed to exterminate pid: " << pid << std::endl;
@@ -322,7 +322,7 @@ void Shell::KillAll() {
 	while (backgroundPid.size() > 0) {
 		KillSystem(backgroundPid[0]);
 	}
-	
+
 	//Print Completion Message
 	std::cout << "All Processes Exterminated" << std::endl;
 }
