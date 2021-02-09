@@ -44,3 +44,11 @@ repeat 4 xe
 dalekall
 byebye
 byebye
+start x
+background x
+background
+byebye
+start x
+background x
+dalekall
+byebye

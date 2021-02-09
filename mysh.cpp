@@ -156,13 +156,8 @@ void Shell::ExecuteCommand(std::string command) {
 		ReplayCommand(std::stoi(splitCommand[1]));
 	}
 
-	//Start a Program
-	else if (!splitCommand[0].compare("start")) {
-		ExecSystem(splitCommand);
-	}
-
-	//Start a Program in the Background
-	else if (!splitCommand[0].compare("background")) {
+	//Start a Program Either in the Foreground or Background
+	else if (!splitCommand[0].compare("start") || !splitCommand[0].compare("background")) {
 		ExecSystem(splitCommand);
 	}
 
