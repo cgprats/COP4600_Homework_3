@@ -1,0 +1,12 @@
+history
+byebye
+start xterm -bg green
+start /usr/bin/xterm -bg green
+history
+replay 1
+start /usr/bin/xterm -bg green
+background /usr/bin/xterm -bg green
+dalek 10869
+repeat 15 /usr/bin/xterm -bg green
+dalekall
+byebye
